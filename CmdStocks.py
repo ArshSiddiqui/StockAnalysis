@@ -59,10 +59,25 @@ def add_stock(ticker):
         print("Try a different ticker")
         sys.exit(0)
 
-
-
     file = open('stocks.txt', 'a')
     file.write('\n' + ticker.upper())
+
+
+def remove_stock(ticker):
+    file = open('stocks.txt', 'r')
+    lines = file.readlines()
+    file.close()
+
+    new_file = open('stocks.txt', 'w')
+    spot = 0
+    for line in lines:
+        if line.strip('\n') != ticker.upper():
+            if spot != 0:
+                new_file.write('\n')
+            new_file.write(line.strip('\n'))
+            spot += 1
+
+    new_file.close()
 
 if __name__ == "__main__":
     options = sys.argv[1:]
@@ -70,3 +85,5 @@ if __name__ == "__main__":
         show_watchlist()
     elif options[0] == 'add':
         add_stock(options[1])
+    elif options[0] == 'rm':
+        remove_stock(options[1])
