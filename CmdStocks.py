@@ -12,7 +12,7 @@ def show_watchlist():
     end_date = str(today)
 
     print('Watchlist')
-    print('Ticker   Price         Mvmt       % Mvmt')
+    print('Ticker   Price          Mvmt       % Mvmt')
 
     file = open('stocks.txt', 'r')
     lines = file.readlines()
@@ -27,21 +27,26 @@ def show_watchlist():
         percent_difference = close[1]/close[0]
 
         len_bw_tp = 9 - len(ticker)
+        len_bw_pm = 10 - len(str(close[1].round(2)))
 
         if difference < 0:
             print(Fore.RED + ticker, end="")
             for i in range(0, len_bw_tp):
                 print(" ", end="")
-            print('$' + str(close[1].round(2)) + '   ' + '\u25b2'
-                  + '   ' + str(difference.round(2)) +
+            print('$' + str(close[1].round(2)), end="")
+            for i in range(0, len_bw_pm):
+                print(" ", end="")
+            print('\u25b2' + '   ' + str(difference.round(2)) +
                   '      -' + str(percent_difference.round(2)) + '%')
         else:
             print(Fore.GREEN + ticker, end="")
             for i in range(0, len_bw_tp):
                 print(" ", end="")
-            print('$' + str(close[1].round(2)) + '   ' + '\u25bc'
-            + '    +' + str(difference.round(2)) +
-                  '      +' + str(percent_difference.round(2)) + '%' )
+            print('$' + str(close[1].round(2)), end="")
+            for i in range(0, len_bw_pm):
+                print(" ", end="")
+            print('\u25b2' + '   +' + str(difference.round(2)) +
+                  '      +' + str(percent_difference.round(2)) + '%')
 
 
 def add_stock(ticker):
