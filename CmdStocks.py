@@ -94,7 +94,11 @@ def graph(ticker):
     today = datetime.date.today()
     yesterday = str(today - datetime.timedelta(7))
     end_date = str(today)
-    panel_data = data.DataReader(ticker.upper(), 'yahoo', yesterday, end_date)
+    try:
+        panel_data = data.DataReader(ticker, 'yahoo', yesterday, end_date)
+    except:
+        print("Try a different ticker")
+        sys.exit(0)
     close = panel_data['Close']
 
     all_weekdays = pd.date_range(start=yesterday, end=end_date, freq='B')
