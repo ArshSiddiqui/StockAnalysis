@@ -5,6 +5,7 @@ import colorama
 from colorama import Fore
 import matplotlib.pyplot as plt
 import sys
+import termplotlib as tpl
 
 def show_watchlist():
     today = datetime.date.today()
@@ -79,6 +80,24 @@ def remove_stock(ticker):
 
     new_file.close()
 
+
+def graph(ticker):
+    today = datetime.date.today()
+    yesterday = str(today - datetime.timedelta(7))
+    end_date = str(today)
+    panel_data = data.DataReader(ticker.upper(), 'yahoo', yesterday, end_date)
+    close = panel_data['Close']
+
+    all_weekdays = pd.date_range(start=yesterday, end=end_date, freq='B')
+    close = close.reindex(all_weekdays)
+    close = close.fillna(method='ffill')
+
+    fig = tpl.figure()
+    x = [1, 2, 3, 4, 5, 6]
+    fig.plot(x, close.tolist(), label=ticker.upper(), width=80, height=20)
+    fig.show()
+
+
 if __name__ == "__main__":
     options = sys.argv[1:]
     if options[0] == 'watchlist':
@@ -87,3 +106,5 @@ if __name__ == "__main__":
         add_stock(options[1])
     elif options[0] == 'rm':
         remove_stock(options[1])
+    elif options[0] == 'graph':
+        graph(options[1])
