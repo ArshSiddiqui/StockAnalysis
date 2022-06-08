@@ -29,6 +29,7 @@ def show_watchlist():
 
         len_bw_tp = 9 - len(ticker)
         len_bw_pm = 10 - len(str(close[1].round(2)))
+        len_bw_mm = 10 - len(str(difference.round(2)))
 
         if difference < 0:
             print(Fore.RED + ticker, end="")
@@ -46,8 +47,10 @@ def show_watchlist():
             print('$' + str(close[1].round(2)), end="")
             for i in range(0, len_bw_pm):
                 print(" ", end="")
-            print('\u25b2' + '   +' + str(difference.round(2)) +
-                  '      +' + str(percent_difference.round(2)) + '%')
+            print('\u25b2' + '   +' + str(difference.round(2)), end="")
+            for i in range(0, len_bw_mm):
+                print(" ", end="")
+            print('+' + str(percent_difference.round(2)) + '%')
 
 
 def add_stock(ticker):
@@ -71,12 +74,18 @@ def remove_stock(ticker):
 
     new_file = open('stocks.txt', 'w')
     spot = 0
+    found = False
     for line in lines:
         if line.strip('\n') != ticker.upper():
             if spot != 0:
                 new_file.write('\n')
             new_file.write(line.strip('\n'))
             spot += 1
+        else:
+            found = True
+
+    if not found:
+        print("That stock was not in your watchlist")
 
     new_file.close()
 
@@ -103,8 +112,17 @@ if __name__ == "__main__":
     if options[0] == 'watchlist':
         show_watchlist()
     elif options[0] == 'add':
-        add_stock(options[1])
+        if len(options) == 1:
+            print("You'll need to add a stock ticker to the end of that")
+        else:
+            add_stock(options[1])
     elif options[0] == 'rm':
         remove_stock(options[1])
     elif options[0] == 'graph':
         graph(options[1])
+    else:
+        print("That command does not work, try these:")
+        print("watchlist    - display your watchlist")
+        print("add TICKER   - add a stock to your watchlist")
+        print("rm TICKER    - remove a stock from your watchlist")
+        print("graph TICKER - graph a stock for a 6 day time period")
